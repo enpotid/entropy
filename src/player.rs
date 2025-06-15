@@ -27,13 +27,15 @@ pub struct SpriteSizeState {
 struct PlayerStats {
     speed: f32,
     jump_speed: f32,
+    jump_height: f32,
 }
 
 impl Default for PlayerStats {
     fn default() -> Self {
         Self {
             speed: 400.0,
-            jump_speed: 200.0,
+            jump_speed: 100.0,
+            jump_height: 400.0,
         }
     }
 }
@@ -84,19 +86,19 @@ fn move_player(
         }
 
         if player.jumping {
-            if transform.translation.y < 200.0 {
+            if transform.translation.y < stats.jump_height {
                 transform.translation.y +=
-                    ((200.02 - transform.translation.y).ln() + 4.0) * jump_speed;
+                    ((stats.jump_height + 0.02 - transform.translation.y).ln() + 4.0) * jump_speed;
 
-                if transform.translation.y > 200.0 {
-                    transform.translation.y = 200.0;
+                if transform.translation.y > stats.jump_height {
+                    transform.translation.y = stats.jump_height;
                     player.jumping = false;
                 }
             }
         } else {
             if transform.translation.y > 0.0 {
                 transform.translation.y -=
-                    ((200.02 - transform.translation.y).ln() + 4.0) * jump_speed;
+                    ((stats.jump_height + 0.02 - transform.translation.y).ln() + 4.0) * jump_speed;
 
                 if transform.translation.y < 0.0 {
                     transform.translation.y = 0.0
