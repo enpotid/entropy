@@ -42,7 +42,13 @@ fn zoom_and_follow(
         if let Ok(player_transform) = player_query.single() {
             if let Ok(window) = windows.single() {
                 transform.translation.x = player_transform.translation.x;
-                transform.translation.y = (window.height() / 2.0 - 100.0) * transform.scale.y
+                transform.translation.y = (window.height() / 2.0
+                    - if window.height() / 2.0 > 200.0 {
+                        100.0
+                    } else {
+                        0.0
+                    })
+                    * transform.scale.y
                     + player_transform.translation.y;
             }
         }

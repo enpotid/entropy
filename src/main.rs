@@ -34,7 +34,7 @@ fn setup(mut commands: Commands, _asset_server: Res<AssetServer>) {
         Sprite {
             color: Color::linear_rgb(0.3, 0.7, 0.3),
             anchor: Anchor::TopCenter,
-            custom_size: Some(Vec2::new(500.0, 30.0)),
+            custom_size: Some(Vec2::new(500000.0, 30000.0)),
             ..default()
         },
         Transform::from_xyz(0.0, 0.0, 0.0),
