@@ -56,7 +56,10 @@ fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
         Player {
             jump: JumpKind::Stay,
         },
-        SpriteState { is_falling: false },
+        SpriteState {
+            is_falling: false,
+            head_bumped: false,
+        },
         SpriteSizeState {
             done: false,
             width: 800.0,

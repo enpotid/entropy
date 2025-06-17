@@ -54,13 +54,17 @@ pub fn move_player(
         }
 
         if let JumpKind::Up(start_y) = player.jump {
-            if start_y + stats.jump_height <= transform.translation.y {
-                transform.translation.y = start_y + stats.jump_height;
+            if sprite_state.head_bumped {
                 player.jump = JumpKind::Down(start_y);
             } else {
                 transform.translation.y +=
                     ((start_y + stats.jump_height + 0.02 - transform.translation.y).ln() + 4.0)
                         * jump_speed;
+
+                if start_y + stats.jump_height <= transform.translation.y {
+                    transform.translation.y = start_y + stats.jump_height;
+                    player.jump = JumpKind::Down(start_y);
+                }
             }
         } else if let JumpKind::Down(start_y) = player.jump {
             if !sprite_state.is_falling {

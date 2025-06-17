@@ -26,6 +26,7 @@ pub struct SpriteSizeState {
 #[derive(Component)]
 pub struct SpriteState {
     pub is_falling: bool,
+    pub head_bumped: bool,
 }
 
 pub fn resize_sprite(

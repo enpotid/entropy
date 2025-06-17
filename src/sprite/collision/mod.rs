@@ -24,9 +24,9 @@ fn sprite_collision(
     mut query: Query<(&mut Transform, &mut SpriteState, &SpriteSizeState), With<Sprite>>,
 ) {
     for (mut transform, mut sprite_state, sprite_size) in &mut query {
+        collision_top(&map, &mut transform, &mut sprite_state, sprite_size);
+        collision_bottom(&map, &mut transform, &mut sprite_state, sprite_size);
         collision_left(&map, &mut transform, sprite_size);
         collision_right(&map, &mut transform, sprite_size);
-        collision_top(&map, &mut transform, sprite_size);
-        collision_bottom(&map, &mut transform, &mut sprite_state, sprite_size);
     }
 }
