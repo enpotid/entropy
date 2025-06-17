@@ -1,12 +1,13 @@
 mod camera;
+mod map;
 mod player;
 
 use camera::*;
+use map::*;
 use player::*;
 
 use bevy::{
     prelude::*,
-    sprite::Anchor,
     window::{WindowMode, WindowPlugin},
 };
 
@@ -25,18 +26,6 @@ fn main() {
         }))
         .add_plugins(PlayerPlugin)
         .add_plugins(CameraPlugin)
-        .add_systems(Startup, setup)
+        .add_plugins(MapPlugin)
         .run();
-}
-
-fn setup(mut commands: Commands, _asset_server: Res<AssetServer>) {
-    commands.spawn((
-        Sprite {
-            color: Color::linear_rgb(0.3, 0.7, 0.3),
-            anchor: Anchor::TopCenter,
-            custom_size: Some(Vec2::new(500000.0, 30000.0)),
-            ..default()
-        },
-        Transform::from_xyz(0.0, 0.0, 0.0),
-    ));
 }
