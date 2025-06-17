@@ -1,4 +1,4 @@
-use crate::player::*;
+use crate::sprite::{SpriteSizeState, player::Player};
 
 use bevy::{input::mouse::MouseWheel, prelude::*};
 
@@ -18,7 +18,7 @@ fn spawn_camera(mut commands: Commands) {
 fn zoom_and_follow(
     mut scroll_evr: EventReader<MouseWheel>,
     mut query: Query<(&Camera, &mut Transform), With<Camera2d>>,
-    player_query: Query<&Transform, (With<Player>, Without<Camera2d>)>,
+    player_query: Query<(&Transform, &SpriteSizeState), (With<Player>, Without<Camera2d>)>,
     windows: Query<&Window>,
 ) {
     for (_camera, mut transform) in query.iter_mut() {
@@ -39,9 +39,9 @@ fn zoom_and_follow(
             );
         }
 
-        if let Ok(player_transform) = player_query.single() {
+        if let Ok((player_transform, sprite_size)) = player_query.single() {
             if let Ok(window) = windows.single() {
-                transform.translation.x = player_transform.translation.x;
+                transform.translation.x = player_transform.translation.x + sprite_size.width / 2.0;
                 transform.translation.y = (window.height() / 2.0
                     - if window.height() / 2.0 > 200.0 {
                         100.0

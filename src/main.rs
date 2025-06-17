@@ -1,10 +1,10 @@
 mod camera;
 mod map;
-mod player;
+mod sprite;
 
 use camera::*;
 use map::*;
-use player::*;
+use sprite::*;
 
 use bevy::{
     prelude::*,
@@ -24,7 +24,7 @@ fn main() {
             }),
             ..default()
         }))
-        .add_plugins(PlayerPlugin)
+        .add_plugins(SpritePlugin)
         .add_plugins(CameraPlugin)
         .add_plugins(MapPlugin)
         .run();

@@ -1,4 +1,4 @@
-use crate::player::*;
+use crate::sprite::SpriteSizeState;
 
 use bevy::{prelude::*, sprite::Anchor};
 use std::collections::HashMap;
@@ -13,7 +13,7 @@ impl Plugin for MapPlugin {
     }
 }
 
-#[derive(Component)]
+#[derive(Component, Clone, Copy)]
 pub struct Tile {
     pub kind: TileKind,
     pub top: f32,
@@ -121,6 +121,30 @@ pub fn xy_to_position(x: f32, y: f32) -> Position {
             y as i64 / 1000 - 1
         },
     )
+}
+
+pub fn is_solid_position(map: &Map, x: f32, y: f32) -> Option<Tile> {
+    if let Some(tile) = map.tiles.get(&xy_to_position(x, y)) {
+        if is_solid(tile.kind) {
+            Some(*tile)
+        } else {
+            None
+        }
+    } else {
+        None
+    }
+}
+
+pub fn is_not_solid_position(map: &Map, x: f32, y: f32) -> Option<Tile> {
+    if let Some(tile) = map.tiles.get(&xy_to_position(x, y)) {
+        if !is_solid(tile.kind) {
+            Some(*tile)
+        } else {
+            None
+        }
+    } else {
+        None
+    }
 }
 
 pub fn is_solid(kind: TileKind) -> bool {
