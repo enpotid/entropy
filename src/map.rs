@@ -37,22 +37,50 @@ pub struct Map {
 pub struct Position(i64, i64);
 
 fn spawn_map(mut commands: Commands, asset_server: Res<AssetServer>, mut map: ResMut<Map>) {
-    for i in -10..=10 {
-        for ii in i..=10 {
+    let mut m = [
+        [1, 0, 1, 0, 0, 0, 1, 0, 1, 1],
+        [1, 0, 1, 0, 0, 0, 1, 0, 1, 1],
+        [1, 0, 1, 0, 0, 0, 1, 0, 1, 1],
+        [1, 0, 1, 0, 0, 0, 1, 0, 1, 1],
+        [1, 0, 1, 0, 0, 0, 1, 0, 1, 1],
+        [1, 0, 1, 0, 0, 0, 1, 0, 1, 1],
+        [1, 0, 1, 0, 0, 0, 1, 0, 1, 1],
+        [1, 0, 1, 0, 0, 0, 0, 1, 1, 1],
+        [1, 0, 1, 0, 0, 0, 0, 1, 1, 1],
+        [1, 0, 1, 0, 0, 0, 1, 0, 1, 1],
+    ];
+    m.reverse();
+
+    for i in 0..m.len() as i64 {
+        for ii in 0..m[0].len() as i64 {
+            let tile = Tile {
+                kind: if m[i as usize][ii as usize] == 0 {
+                    TileKind::Sky
+                } else {
+                    TileKind::Plains
+                },
+                top: 1000.0 * (i - m.len() as i64 / 2) as f32 + 1000.0,
+                bottom: 1000.0 * (i - m.len() as i64 / 2) as f32,
+                left: 1000.0 * (ii - m[0].len() as i64 / 2) as f32,
+                right: 1000.0 * (ii - m[0].len() as i64 / 2) as f32 + 1000.0,
+            };
+
             commands.spawn((
                 Sprite {
-                    image: asset_server.load("map/sky.png"),
+                    image: if m[i as usize][ii as usize] == 0 {
+                        asset_server.load("map/sky.png")
+                    } else {
+                        asset_server.load("map/plains.png")
+                    },
                     anchor: Anchor::BottomLeft,
                     ..default()
                 },
-                Transform::from_xyz(1000.0 * i as f32, 1000.0 * ii as f32, 0.0),
-                Tile {
-                    kind: TileKind::Sky,
-                    top: 1000.0 * ii as f32 + 1000.0,
-                    bottom: 1000.0 * ii as f32,
-                    left: 1000.0 * i as f32,
-                    right: 1000.0 * i as f32 + 1000.0,
-                },
+                Transform::from_xyz(
+                    1000.0 * (ii - m[0].len() as i64 / 2) as f32,
+                    1000.0 * (i - m.len() as i64 / 2) as f32,
+                    0.0,
+                ),
+                tile,
                 SpriteSizeState {
                     done: false,
                     width: 1000.0,
@@ -61,50 +89,13 @@ fn spawn_map(mut commands: Commands, asset_server: Res<AssetServer>, mut map: Re
             ));
 
             map.tiles.insert(
-                Position(i, ii),
-                Tile {
-                    kind: TileKind::Sky,
-                    top: 1000.0 * ii as f32 + 1000.0,
-                    bottom: 1000.0 * ii as f32,
-                    left: 1000.0 * i as f32,
-                    right: 1000.0 * i as f32 + 1000.0,
-                },
+                Position(
+                    (ii - m[0].len() as i64 / 2) as i64,
+                    (i - m.len() as i64 / 2) as i64,
+                ),
+                tile,
             );
         }
-    }
-
-    for i in -10..=10 {
-        commands.spawn((
-            Sprite {
-                image: asset_server.load("map/plains.png"),
-                anchor: Anchor::BottomLeft,
-                ..default()
-            },
-            Transform::from_xyz(1000.0 * i as f32, 1000.0 * (i - 1) as f32, 0.0),
-            Tile {
-                kind: TileKind::Plains,
-                top: 1000.0 * (i - 1) as f32 + 1000.0,
-                bottom: 1000.0 * (i - 1) as f32,
-                left: 1000.0 * i as f32,
-                right: 1000.0 * i as f32 + 1000.0,
-            },
-            SpriteSizeState {
-                done: false,
-                width: 1000.0,
-                height: 1000.0,
-            },
-        ));
-
-        map.tiles.insert(
-            Position(i, i - 1),
-            Tile {
-                kind: TileKind::Plains,
-                top: 1000.0 * (i - 1) as f32 + 1000.0,
-                bottom: 1000.0 * (i - 1) as f32,
-                left: 1000.0 * i as f32,
-                right: 1000.0 * i as f32 + 1000.0,
-            },
-        );
     }
 }
 
